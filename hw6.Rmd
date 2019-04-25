@@ -1,0 +1,40 @@
+---
+title: "hw6"
+author: "Zihao Han"
+date: "April 24, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+BestInShowColmName<-read_xlsx('KIB - Best in Show (public).xlsx', sheet='Best in show full sheet',skip= 2,n_max= 1,col_names = F)
+BestInShowFullSheet<-read_xlsx('KIB - Best in Show (public).xlsx', sheet='Best in show full sheet',skip = 4,col_names = F)
+```
+```{r}
+BestInShowColmName
+BestInShowColmName[1]<-c("Dog breed")
+BestInShowColmName[7]<-c("POPULARITY with score")
+```
+```{r}
+names(BestInShowFullSheet) <- c(BestInShowColmName)
+BestInShowFullSheet
+BestInShowFullSheet%>%group_by(`Dog breed`)
+colnames(BestInShowFullSheet) <- make.unique(names(BestInShowFullSheet))
+
+```
+```{r,fig.height = 30, fig.width =30, fig.align = "center"}
+#breed of dog 1
+#type of dog (work, toy, etc.) 1
+#size of dog 1
+#data score 1
+#popularity 1
+#intelligence of the dog 1
+#appropriate legends & explanation
+library(ggplot2)
+ggplot(BestInShowFullSheet,aes(x=`datadog score`,y=`POPULAR RATING`,color=`category`,size=-`POPULAR RATING`,shape=`size category` ))+geom_jitter(alpha=0.6)+geom_text(aes(label=`intelligence category`),check_overlap = TRUE,size = 8,vjust=-1,alpha=0.5)+geom_text(aes(label="intelligence:"),size = 6,vjust=-2.5,alpha=0.7)+xlab("Score(larger socre means better)")+ylab("Popularity(smaller number means higher ranking)")+ggtitle("Hot Dogs")+theme_light() +theme(legend.position = "bottom",legend.text=element_text(size=18),legend.title=element_text(size=18),axis.text=element_text(size=18),axis.title=element_text(size=25,face="bold"),plot.title=element_text(size=45,face="bold"))+ geom_text(aes(label =`Dog breed` ),size = 10,vjust=-2.5,alpha=0.76)   
+```
